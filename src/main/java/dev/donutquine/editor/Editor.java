@@ -7,10 +7,16 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.formdev.flatlaf.FlatDarkLaf;
+import com.formdev.flatlaf.FlatLaf;
+import com.formdev.flatlaf.FlatLightLaf;
 
 import dev.donutquine.editor.displayObjects.SpriteSheet;
 import dev.donutquine.editor.layout.components.Table;
@@ -448,5 +454,36 @@ public class Editor {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private void setTheme(FlatLaf theme) {
+        try {
+            UIManager.setLookAndFeel(theme);
+            FlatLaf.updateUI();
+
+            for (java.awt.Window window : java.awt.Window.getWindows()) {
+                if (window instanceof JFrame frame && frame.isDisplayable()) {
+
+                    boolean maximized =
+                        (frame.getExtendedState() & JFrame.MAXIMIZED_BOTH) != 0;
+
+                    if (!maximized) {
+                        frame.pack();
+                    }
+
+                    frame.revalidate();
+                    frame.repaint();
+                }
+            }
+        } catch (Exception e) {
+        }
+    }
+
+	public void setLightMode() {
+        this.setTheme(new FlatLightLaf());
+	}
+
+    public void setDarkMode() {
+        this.setTheme(new FlatDarkLaf());
     }
 }

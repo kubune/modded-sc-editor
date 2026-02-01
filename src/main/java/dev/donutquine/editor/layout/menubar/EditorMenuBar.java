@@ -1,9 +1,17 @@
 package dev.donutquine.editor.layout.menubar;
 
-import dev.donutquine.editor.Editor;
-import dev.donutquine.editor.layout.menubar.menus.*;
+import javax.swing.Box;
+import javax.swing.JFrame;
+import javax.swing.JMenuBar;
 
-import javax.swing.*;
+import dev.donutquine.editor.Editor;
+import dev.donutquine.editor.layout.menubar.menus.DarkModeMenu;
+import dev.donutquine.editor.layout.menubar.menus.EditMenu;
+import dev.donutquine.editor.layout.menubar.menus.FileMenu;
+import dev.donutquine.editor.layout.menubar.menus.HelpMenu;
+import dev.donutquine.editor.layout.menubar.menus.ModMenu;
+import dev.donutquine.editor.layout.menubar.menus.OptionsMenu;
+import dev.donutquine.editor.layout.menubar.menus.ViewMenu;
 
 public class EditorMenuBar extends JMenuBar {
     private final FileMenu fileMenu;
@@ -12,6 +20,7 @@ public class EditorMenuBar extends JMenuBar {
     private final OptionsMenu optionsMenu;
     private final HelpMenu helpMenu;
     private final ModMenu modMenu;
+    private final DarkModeMenu darkMode;
 
     public EditorMenuBar(Editor editor) {
         JFrame frame = editor.getWindow().getFrame();
@@ -22,6 +31,7 @@ public class EditorMenuBar extends JMenuBar {
         this.optionsMenu = new OptionsMenu(editor);
         this.helpMenu = new HelpMenu(frame);
         this.modMenu = new ModMenu(editor);
+        this.darkMode = new DarkModeMenu(editor);
 
         this.add(this.fileMenu);
         this.add(this.editMenu);
@@ -29,6 +39,9 @@ public class EditorMenuBar extends JMenuBar {
         this.add(this.optionsMenu);
         this.add(this.helpMenu);
         this.add(this.modMenu);
+
+        this.add(Box.createHorizontalGlue());
+        this.add(this.darkMode);
     }
 
     public FileMenu getFileMenu() {
@@ -45,6 +58,10 @@ public class EditorMenuBar extends JMenuBar {
 
     public OptionsMenu getOptionsMenu() {
         return optionsMenu;
+    }
+
+    public DarkModeMenu getDarkModeMenu() {
+        return darkMode;
     }
 
     @Override

@@ -50,7 +50,6 @@ public class ChildrenTableContextMenu extends ContextMenu {
             movieClip = (MovieClip) selectedObject;
             type = 0;
         }
-        System.out.println("Getting child details for type: " + type + ", selectedObject ID: " + selectedObject.getId() + ", textField: " + textField + ", movieClip: " + movieClip);
         switch (type) {
             case 0 -> {
                 // handle MovieClip case

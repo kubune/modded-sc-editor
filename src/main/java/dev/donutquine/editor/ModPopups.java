@@ -11,7 +11,6 @@ import dev.donutquine.swf.textfields.TextFieldOriginal;
 public class ModPopups {
     public static void showTextFieldDetailsPopup(Editor editor, TextField textField) {
         JFrame parent = editor.getWindow().getFrame();
-        System.out.println("Showing TextField details popup for TextField ID: " + textField.getId());
         JLabel titleLabel = new JLabel("TextField (#" + textField.getId() + ") details");
         titleLabel.putClientProperty(FlatClientProperties.STYLE_CLASS, "h1");
 

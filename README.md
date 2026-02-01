@@ -1,4 +1,18 @@
-# SC Editor
+# Modded SC Editor
+
+## Modded Features:
+- DARK MODE
+- Copy any cell to clipboard
+- Infinite zoom
+- Reload file
+- Copy child name
+- Get child details (TextField right now)
+
+You can suggest features in issues tab :D
+
+## Technical Requirements
+
+[Technical Requirements (en)](./docs/technical_requirements_en.md)
 
 [Technical Requirements (ru)](./docs/technical_requirements.md)
 

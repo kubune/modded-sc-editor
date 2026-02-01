@@ -1,5 +1,7 @@
 package dev.donutquine.renderer.impl.swf.objects;
 
+import java.awt.Color;
+
 import dev.donutquine.editor.renderer.DrawApi;
 import dev.donutquine.editor.renderer.Stage;
 import dev.donutquine.math.Rect;
@@ -8,17 +10,17 @@ import dev.donutquine.swf.Matrix2x3;
 import dev.donutquine.swf.textfields.TextFieldOriginal;
 import dev.donutquine.utilities.RenderConfig;
 
-import java.awt.*;
-
 public class TextField extends DisplayObject {
     private boolean isInteractive;
     private float cursorBlinkTime;
     private Rect bounds;
+    public TextFieldOriginal original;
 
     public static DisplayObject createTextField(TextFieldOriginal original) {
         TextField textField = new TextField();
         textField.id = original.getId();
         textField.bounds = original.getBounds();
+        textField.original = original;
         return textField;
     }
 
@@ -71,5 +73,9 @@ public class TextField extends DisplayObject {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public TextFieldOriginal getOriginal() {
+        return this.original;
     }
 }

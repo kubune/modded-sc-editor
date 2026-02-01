@@ -7,10 +7,12 @@ import java.util.function.Function;
 import dev.donutquine.editor.Editor;
 import dev.donutquine.editor.ModConfiguration;
 import dev.donutquine.editor.ModFunctionality;
+import dev.donutquine.editor.ModPopups;
 import dev.donutquine.editor.layout.components.Table;
 import dev.donutquine.editor.layout.components.TablePopupMenuListener;
 import dev.donutquine.renderer.impl.swf.objects.DisplayObject;
 import dev.donutquine.renderer.impl.swf.objects.MovieClip;
+import dev.donutquine.renderer.impl.swf.objects.TextField;
 
 public class ChildrenTableContextMenu extends ContextMenu {
     private final Table table;
@@ -30,8 +32,34 @@ public class ChildrenTableContextMenu extends ContextMenu {
         this.add("Enable", event -> this.changeVisibility(child -> true));
         this.add("Disable", event -> this.changeVisibility(child -> false));
         this.add("Copy child name", event -> this.copyChildName());
+        this.add("Get child details", event -> this.getChildDetails());
 
         this.popupMenu.addPopupMenuListener(new TablePopupMenuListener(this.popupMenu, table, rowIndex -> setMainComponentsEnabled(rowIndex != -1)));
+    }
+
+    private void getChildDetails() {
+        int selectedRow = this.table.getSelectedRow();
+        DisplayObject selectedObject = this.getMovieClip().getTimelineChildren()[selectedRow];
+        int type = -1; // -1: Unknown, 0: MovieClip, 1: TextField
+        TextField textField = null;
+        MovieClip movieClip = null;
+        if (selectedObject.isTextField()) {
+            textField = (TextField) selectedObject;
+            type = 1;
+        } else if (selectedObject.isMovieClip()) {
+            movieClip = (MovieClip) selectedObject;
+            type = 0;
+        }
+        System.out.println("Getting child details for type: " + type + ", selectedObject ID: " + selectedObject.getId() + ", textField: " + textField + ", movieClip: " + movieClip);
+        switch (type) {
+            case 0 -> {
+                // handle MovieClip case
+            }
+            case 1 -> {
+                ModPopups.showTextFieldDetailsPopup(this.editor, textField);
+                // handle TextField case
+            }
+        }
     }
 
     private void copyChildName() {

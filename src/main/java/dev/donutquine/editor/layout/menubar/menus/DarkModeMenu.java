@@ -2,6 +2,7 @@ package dev.donutquine.editor.layout.menubar.menus;
 
 import java.awt.Color;
 import java.awt.event.KeyEvent;
+import java.util.prefs.Preferences;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -9,10 +10,17 @@ import javax.swing.JButton;
 import dev.donutquine.editor.Editor;
 
 public class DarkModeMenu extends JButton {
-    private boolean isDarkMode = false;
+    private boolean isDarkMode;
 
     public DarkModeMenu(Editor editor) {
         super("☾");
+        boolean darkMode = Preferences.userRoot().node("sc-editor").getBoolean("MODDED_DARK_MODE", false);
+        this.isDarkMode = darkMode;
+        if (darkMode) {
+            this.setText("☀");
+        } else {
+            this.setText("☾");
+        }
         this.setBorder(
             BorderFactory.createEmptyBorder(4, 15, 6, 15)
         );

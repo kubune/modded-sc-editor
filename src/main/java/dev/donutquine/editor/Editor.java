@@ -6,6 +6,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.prefs.Preferences;
 
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
@@ -71,6 +72,13 @@ public class Editor {
 
     public Editor(EditorSettings settings) {
         this.settings = settings;
+        Preferences preferences = Preferences.userRoot().node("sc-editor");
+        boolean isDarkMode = preferences.getBoolean("MODDED_DARK_MODE", false);
+        if (isDarkMode) {
+            this.setDarkMode();
+        } else {
+            this.setLightMode();
+        }
     }
 
     public String getPath() {
@@ -480,10 +488,14 @@ public class Editor {
     }
 
 	public void setLightMode() {
+        Preferences preferences = Preferences.userRoot().node("sc-editor");
         this.setTheme(new FlatLightLaf());
+        preferences.putBoolean("MODDED_DARK_MODE", false);
 	}
 
     public void setDarkMode() {
+        Preferences preferences = Preferences.userRoot().node("sc-editor");
         this.setTheme(new FlatDarkLaf());
+        preferences.putBoolean("MODDED_DARK_MODE", true);
     }
 }

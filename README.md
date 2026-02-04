@@ -6,6 +6,7 @@
 - Infinite zoom
 - Reload file
 - Copy child name
+- Enable/Disable TextField bounds drawing
 - Get child details (TextField right now)
 
 You can suggest features in issues tab :D

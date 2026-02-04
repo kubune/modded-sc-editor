@@ -7,6 +7,7 @@ import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
+import javax.swing.KeyStroke;
 
 import dev.donutquine.editor.Editor;
 import dev.donutquine.editor.ModConfiguration;
@@ -40,6 +41,7 @@ public class ModMenu extends JMenu {
         
         JCheckBoxMenuItem showTextFieldBounds = new JCheckBoxMenuItem("Show TextField Bounds");
         showTextFieldBounds.setSelected(ModConfiguration.showTextFieldBounds);
+        showTextFieldBounds.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_T, 0));
         showTextFieldBounds.addActionListener((event) -> {
             ModConfiguration.showTextFieldBounds = showTextFieldBounds.isSelected();
         });

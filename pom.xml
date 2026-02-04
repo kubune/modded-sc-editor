@@ -31,7 +31,7 @@
         <flatlafVersion>3.7</flatlafVersion>
         <main.class>dev.donutquine.editor.Main</main.class>
         <finalName>${project.artifactId}</finalName>
-        <releaseVersion>1.5.6-mod-1</releaseVersion>
+        <releaseVersion>1.5.6-mod-2</releaseVersion>
     </properties>
     <build>
         <finalName>${finalName}</finalName>

@@ -1,6 +1,6 @@
 package dev.donutquine.editor.renderer;
 
-import dev.donutquine.editor.ModConfiguration;
+import dev.donutquine.editor.Configuration;
 import dev.donutquine.math.MathHelper;
 
 public class CameraZoom {
@@ -67,7 +67,7 @@ public class CameraZoom {
     public void zoomTo(int step) {
         float scale = getScaleByStep(step);
 
-        if (!ModConfiguration.infiniteZoom && scale > 1000f) {
+        if (!Configuration.infiniteZoom && scale > 1000f) {
             setPointSize(MAX_POINT_SIZE);
             scaleStep = Math.min(step, estimateCurrentScaleStep(MAX_POINT_SIZE));
             return;

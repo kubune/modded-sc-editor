@@ -4,10 +4,12 @@ import java.awt.Toolkit;
 import java.awt.datatransfer.StringSelection;
 import java.util.function.Function;
 
+import javax.swing.JMenuItem;
+import javax.swing.event.PopupMenuEvent;
+import javax.swing.event.PopupMenuListener;
+
 import dev.donutquine.editor.Editor;
-import dev.donutquine.editor.ModConfiguration;
-import dev.donutquine.editor.ModFunctionality;
-import dev.donutquine.editor.ModPopups;
+import dev.donutquine.editor.MessageDialogs;
 import dev.donutquine.editor.layout.components.Table;
 import dev.donutquine.editor.layout.components.TablePopupMenuListener;
 import dev.donutquine.renderer.impl.swf.objects.DisplayObject;
@@ -17,6 +19,7 @@ import dev.donutquine.renderer.impl.swf.objects.TextField;
 public class ChildrenTableContextMenu extends ContextMenu {
     private final Table table;
     private final Editor editor;
+    private final JMenuItem textFieldDetailsItem;
 
     public ChildrenTableContextMenu(Table table, Editor editor) {
         super(table, null);
@@ -24,20 +27,34 @@ public class ChildrenTableContextMenu extends ContextMenu {
         this.table = table;
         this.editor = editor;
 
-        if (ModConfiguration.copyAnyCell) {
-            this.add(ModFunctionality.COPY_VALUE_TO_CLIPBOARD, event -> ModFunctionality.copyValueToClipboard(editor, table));
-            this.addSeparator();
-        }
         this.add("Toggle visibility", event -> this.changeVisibility(child -> !child.isVisible()));
         this.add("Enable", event -> this.changeVisibility(child -> true));
         this.add("Disable", event -> this.changeVisibility(child -> false));
         this.add("Copy child name", event -> this.copyChildName());
-        this.add("Get child details", event -> this.getChildDetails());
+        this.textFieldDetailsItem = this.add("Get TextField details", event -> this.getTextFieldDetails());
+        this.textFieldDetailsItem.setVisible(false);
 
         this.popupMenu.addPopupMenuListener(new TablePopupMenuListener(this.popupMenu, table, rowIndex -> setMainComponentsEnabled(rowIndex != -1)));
+        this.popupMenu.addPopupMenuListener(new PopupMenuListener() {
+            @Override
+            public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
+                int row = table.getSelectedRow();
+
+                boolean enabled =
+                        row != -1 &&
+                        getMovieClip()
+                            .getTimelineChildren()[row]
+                            .isTextField();
+
+                textFieldDetailsItem.setVisible(enabled);
+            }
+
+            @Override public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {}
+            @Override public void popupMenuCanceled(PopupMenuEvent e) {}
+        });
     }
 
-    private void getChildDetails() {
+    private void getTextFieldDetails() {
         int selectedRow = this.table.getSelectedRow();
         DisplayObject selectedObject = this.getMovieClip().getTimelineChildren()[selectedRow];
         int type = -1; // -1: Unknown, 0: MovieClip, 1: TextField
@@ -55,9 +72,9 @@ public class ChildrenTableContextMenu extends ContextMenu {
                 // handle MovieClip case
             }
             case 1 -> {
-                ModPopups.showTextFieldDetailsPopup(this.editor, textField);
-                // handle TextField case
+                MessageDialogs.showTextFieldDetailsPopup(this.editor, textField);
             }
+
         }
     }
 

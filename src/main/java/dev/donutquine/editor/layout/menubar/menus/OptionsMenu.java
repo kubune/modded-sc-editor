@@ -1,11 +1,16 @@
 package dev.donutquine.editor.layout.menubar.menus;
 
-import dev.donutquine.editor.Editor;
-
-import javax.swing.*;
-import javax.swing.event.ChangeEvent;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
+
+import javax.swing.JCheckBoxMenuItem;
+import javax.swing.JMenu;
+import javax.swing.JSlider;
+import javax.swing.KeyStroke;
+import javax.swing.event.ChangeEvent;
+
+import dev.donutquine.editor.Configuration;
+import dev.donutquine.editor.Editor;
 
 public class OptionsMenu extends JMenu {
     private final Editor editor;
@@ -46,6 +51,16 @@ public class OptionsMenu extends JMenu {
         this.add(wireframeModeCheckBox);
 
         this.wireframeModeCheckBox = wireframeModeCheckBox;
+        
+        JCheckBoxMenuItem showTextFieldBounds = new JCheckBoxMenuItem("Show TextField Bounds");
+        showTextFieldBounds.setSelected(Configuration.showTextFieldBounds);
+        showTextFieldBounds.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_T, 0));
+        showTextFieldBounds.addActionListener(this::toggleShowTextFieldBounds);
+        this.add(showTextFieldBounds);
+    }
+
+    private void toggleShowTextFieldBounds(ActionEvent event) {
+        Configuration.showTextFieldBounds = ((JCheckBoxMenuItem) event.getSource()).isSelected();
     }
 
     private void togglePolygonRendering(ActionEvent event) {

@@ -9,10 +9,10 @@ import javax.swing.JButton;
 
 import dev.donutquine.editor.Editor;
 
-public class DarkModeMenu extends JButton {
+public class DarkModeButton extends JButton {
     private boolean isDarkMode;
 
-    public DarkModeMenu(Editor editor) {
+    public DarkModeButton(Editor editor) {
         super("☾");
         boolean darkMode = Preferences.userRoot().node("sc-editor").getBoolean("MODDED_DARK_MODE", false);
         this.isDarkMode = darkMode;

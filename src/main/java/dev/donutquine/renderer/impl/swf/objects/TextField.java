@@ -2,7 +2,7 @@ package dev.donutquine.renderer.impl.swf.objects;
 
 import java.awt.Color;
 
-import dev.donutquine.editor.ModConfiguration;
+import dev.donutquine.editor.Configuration;
 import dev.donutquine.editor.renderer.DrawApi;
 import dev.donutquine.editor.renderer.Stage;
 import dev.donutquine.math.Rect;
@@ -55,7 +55,7 @@ public class TextField extends DisplayObject {
     }
 
     private boolean shapeRender(Stage stage, Matrix2x3 matrix, ColorTransform colorTransform, int renderConfigBits, boolean noBounds) {
-        if (ModConfiguration.showTextFieldBounds == false) {
+        if (Configuration.showTextFieldBounds == false) {
             return true;
         }
         Rect transformedBounds = new Rect(

@@ -5,11 +5,10 @@ import javax.swing.JFrame;
 import javax.swing.JMenuBar;
 
 import dev.donutquine.editor.Editor;
-import dev.donutquine.editor.layout.menubar.menus.DarkModeMenu;
+import dev.donutquine.editor.layout.menubar.menus.DarkModeButton;
 import dev.donutquine.editor.layout.menubar.menus.EditMenu;
 import dev.donutquine.editor.layout.menubar.menus.FileMenu;
 import dev.donutquine.editor.layout.menubar.menus.HelpMenu;
-import dev.donutquine.editor.layout.menubar.menus.ModMenu;
 import dev.donutquine.editor.layout.menubar.menus.OptionsMenu;
 import dev.donutquine.editor.layout.menubar.menus.ViewMenu;
 
@@ -19,8 +18,7 @@ public class EditorMenuBar extends JMenuBar {
     private final ViewMenu viewMenu;
     private final OptionsMenu optionsMenu;
     private final HelpMenu helpMenu;
-    private final ModMenu modMenu;
-    private final DarkModeMenu darkMode;
+    private final DarkModeButton darkMode;
 
     public EditorMenuBar(Editor editor) {
         JFrame frame = editor.getWindow().getFrame();
@@ -30,15 +28,13 @@ public class EditorMenuBar extends JMenuBar {
         this.viewMenu = new ViewMenu(editor.getWindow());
         this.optionsMenu = new OptionsMenu(editor);
         this.helpMenu = new HelpMenu(frame);
-        this.modMenu = new ModMenu(editor);
-        this.darkMode = new DarkModeMenu(editor);
+        this.darkMode = new DarkModeButton(editor);
 
         this.add(this.fileMenu);
         this.add(this.editMenu);
         this.add(this.viewMenu);
         this.add(this.optionsMenu);
         this.add(this.helpMenu);
-        this.add(this.modMenu);
 
         this.add(Box.createHorizontalGlue());
         this.add(this.darkMode);
@@ -60,7 +56,7 @@ public class EditorMenuBar extends JMenuBar {
         return optionsMenu;
     }
 
-    public DarkModeMenu getDarkModeMenu() {
+    public DarkModeButton getDarkModeMenu() {
         return darkMode;
     }
 

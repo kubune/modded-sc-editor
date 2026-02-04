@@ -1,8 +1,14 @@
 package dev.donutquine.editor.layout.contextmenus;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
+import java.awt.image.BufferedImage;
+import java.nio.IntBuffer;
+import java.nio.file.Path;
+
+import javax.swing.JMenuItem;
+
 import dev.donutquine.editor.Editor;
-import dev.donutquine.editor.ModConfiguration;
-import dev.donutquine.editor.ModFunctionality;
 import dev.donutquine.editor.layout.components.Table;
 import dev.donutquine.editor.layout.components.TablePopupMenuListener;
 import dev.donutquine.editor.renderer.gl.GLConstants;
@@ -10,13 +16,6 @@ import dev.donutquine.editor.renderer.gl.texture.GLTexture;
 import dev.donutquine.editor.renderer.impl.EditorStage;
 import dev.donutquine.utilities.BufferUtils;
 import dev.donutquine.utilities.ImageUtils;
-
-import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.KeyEvent;
-import java.awt.image.BufferedImage;
-import java.nio.IntBuffer;
-import java.nio.file.Path;
 
 public class TextureTableContextMenu extends ContextMenu {
     private final Table table;
@@ -28,10 +27,6 @@ public class TextureTableContextMenu extends ContextMenu {
         this.table = table;
         this.editor = editor;
         
-        if (ModConfiguration.copyAnyCell) {
-            this.add(ModFunctionality.COPY_VALUE_TO_CLIPBOARD, event -> ModFunctionality.copyValueToClipboard(editor, table));
-            this.addSeparator();
-        }
         JMenuItem exportButton = this.add("Export", KeyEvent.VK_E);
         exportButton.addActionListener(this::export);
 

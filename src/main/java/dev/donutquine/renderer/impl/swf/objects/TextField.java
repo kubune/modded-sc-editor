@@ -2,6 +2,7 @@ package dev.donutquine.renderer.impl.swf.objects;
 
 import java.awt.Color;
 
+import dev.donutquine.editor.ModConfiguration;
 import dev.donutquine.editor.renderer.DrawApi;
 import dev.donutquine.editor.renderer.Stage;
 import dev.donutquine.math.Rect;
@@ -54,6 +55,9 @@ public class TextField extends DisplayObject {
     }
 
     private boolean shapeRender(Stage stage, Matrix2x3 matrix, ColorTransform colorTransform, int renderConfigBits, boolean noBounds) {
+        if (ModConfiguration.showTextFieldBounds == false) {
+            return true;
+        }
         Rect transformedBounds = new Rect(
             matrix.applyX(bounds.getLeft(), bounds.getTop()),
             matrix.applyY(bounds.getLeft(), bounds.getTop()),
@@ -61,6 +65,7 @@ public class TextField extends DisplayObject {
             matrix.applyY(bounds.getRight(), bounds.getBottom())
         );
 
+        
         if (stage.startShape(transformedBounds, null, renderConfigBits)) {
             DrawApi drawApi = stage.getDrawApi();
             Color color = new Color(colorTransform.getRedMultiplier(), colorTransform.getGreenMultiplier(), colorTransform.getBlueMultiplier(), colorTransform.getAlpha() / 2);

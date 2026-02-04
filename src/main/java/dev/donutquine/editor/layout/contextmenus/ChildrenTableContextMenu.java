@@ -95,4 +95,13 @@ public class ChildrenTableContextMenu extends ContextMenu {
 
         return null;
     }
+
+    private TextField getTextField() {
+        DisplayObject selectedObject = editor.getSelectedObject();
+        if (selectedObject.isTextField()) {
+            return (TextField) selectedObject;
+        }
+
+        return null;
+    }
 }

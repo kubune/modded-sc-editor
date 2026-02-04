@@ -1,9 +1,12 @@
 package dev.donutquine.editor.layout.menubar.menus;
 
-import javax.swing.*;
-
 import java.awt.event.KeyEvent;
 import java.nio.file.Path;
+
+import javax.swing.JCheckBoxMenuItem;
+import javax.swing.JFrame;
+import javax.swing.JMenu;
+import javax.swing.JMenuItem;
 
 import dev.donutquine.editor.Editor;
 import dev.donutquine.editor.ModConfiguration;
@@ -12,8 +15,6 @@ import dev.donutquine.editor.layout.contextmenus.DisplayObjectContextMenu;
 import dev.donutquine.editor.layout.contextmenus.FrameTableContextMenu;
 import dev.donutquine.editor.layout.contextmenus.TextureTableContextMenu;
 import dev.donutquine.editor.layout.panels.info.MovieClipInfoPanel;
-import dev.donutquine.editor.renderer.Camera;
-import dev.donutquine.editor.renderer.CameraZoom;
 import dev.donutquine.editor.renderer.impl.EditorStage;
 
 public class ModMenu extends JMenu {
@@ -36,9 +37,15 @@ public class ModMenu extends JMenu {
             EditorStage stage = EditorStage.getInstance();
             stage.updatePMVMatrix();
         });
-
+        
+        JCheckBoxMenuItem showTextFieldBounds = new JCheckBoxMenuItem("Show TextField Bounds");
+        showTextFieldBounds.setSelected(ModConfiguration.showTextFieldBounds);
+        showTextFieldBounds.addActionListener((event) -> {
+            ModConfiguration.showTextFieldBounds = showTextFieldBounds.isSelected();
+        });
         this.add(this.copyCell);
         this.add(zoomHack);
+        this.add(showTextFieldBounds);
         this.addSeparator();
         JMenuItem utils = new JMenu("Utils");
         JMenuItem reloadFile = new JMenuItem("Reload File", null);

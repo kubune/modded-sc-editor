@@ -1,13 +1,6 @@
 package dev.donutquine.editor.layout.menubar.menus;
 
-import dev.donutquine.editor.Editor;
-import dev.donutquine.editor.layout.filechooser.BetterFileChooser;
-import dev.donutquine.editor.layout.shortcut.KeyboardUtils;
-import org.jetbrains.annotations.NotNull;
-
-import javax.swing.*;
-import javax.swing.filechooser.FileNameExtensionFilter;
-import java.awt.*;
+import java.awt.Desktop;
 import java.awt.event.ActionEvent;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
@@ -15,6 +8,21 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.prefs.Preferences;
+
+import javax.swing.JFileChooser;
+import javax.swing.JFrame;
+import javax.swing.JMenu;
+import javax.swing.JMenuItem;
+import javax.swing.KeyStroke;
+import javax.swing.ListSelectionModel;
+import javax.swing.SwingWorker;
+import javax.swing.filechooser.FileNameExtensionFilter;
+
+import org.jetbrains.annotations.NotNull;
+
+import dev.donutquine.editor.Editor;
+import dev.donutquine.editor.layout.filechooser.BetterFileChooser;
+import dev.donutquine.editor.layout.shortcut.KeyboardUtils;
 
 public class FileMenu extends JMenu {
     private static final String LAST_DIRECTORY_KEY = "lastDirectory";
@@ -140,6 +148,7 @@ public class FileMenu extends JMenu {
         preferences.put(SAVE_DIRECTORY_KEY, path.toAbsolutePath().getParent().toString());
 
         editor.saveFile(path.toString());
+        System.out.println(path.toString());
     }
 
     private static @NotNull BetterFileChooser createFileChooser(Preferences preferences, String saveDirectoryKey) {

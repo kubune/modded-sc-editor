@@ -83,4 +83,8 @@ public class OptionsMenu extends JMenu {
     private float getPixelSizeFactor() {
         return (float) pixelSizeSlider.getValue() / 100f;
     }
+
+    public JSlider getPixelSizeSlider() {
+        return pixelSizeSlider;
+    }
 }

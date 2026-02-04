@@ -73,7 +73,7 @@ public class Editor {
     public Editor(EditorSettings settings) {
         this.settings = settings;
         Preferences preferences = Preferences.userRoot().node("sc-editor");
-        boolean isDarkMode = preferences.getBoolean("MODDED_DARK_MODE", false);
+        boolean isDarkMode = preferences.getBoolean("DARK_MODE", false);
         if (isDarkMode) {
             this.setDarkMode();
         } else {
@@ -99,6 +99,9 @@ public class Editor {
                 return;
             }
         }
+
+        Preferences preferences = Preferences.userRoot().node("sc-editor");
+        preferences.put("LAST_OPENED_FILE", path.toAbsolutePath().toString());
 
         FileMenu fileMenu = this.window.getMenubar().getFileMenu();
         fileMenu.checkCanSave();
@@ -490,12 +493,12 @@ public class Editor {
 	public void setLightMode() {
         Preferences preferences = Preferences.userRoot().node("sc-editor");
         this.setTheme(new FlatLightLaf());
-        preferences.putBoolean("MODDED_DARK_MODE", false);
+        preferences.putBoolean("DARK_MODE", false);
 	}
 
     public void setDarkMode() {
         Preferences preferences = Preferences.userRoot().node("sc-editor");
         this.setTheme(new FlatDarkLaf());
-        preferences.putBoolean("MODDED_DARK_MODE", true);
+        preferences.putBoolean("DARK_MODE", true);
     }
 }

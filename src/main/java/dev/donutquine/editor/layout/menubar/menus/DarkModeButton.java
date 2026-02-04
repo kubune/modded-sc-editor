@@ -14,7 +14,7 @@ public class DarkModeButton extends JButton {
 
     public DarkModeButton(Editor editor) {
         super("☾");
-        boolean darkMode = Preferences.userRoot().node("sc-editor").getBoolean("MODDED_DARK_MODE", false);
+        boolean darkMode = Preferences.userRoot().node("sc-editor").getBoolean("DARK_MODE", false);
         this.isDarkMode = darkMode;
         if (darkMode) {
             this.setText("☀");

@@ -52,6 +52,14 @@ public class FileMenu extends JMenu {
 
         this.saveAsButton = new JMenuItem("Save as...", KeyEvent.VK_O);
         this.saveAsButton.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, KeyboardUtils.ctrlButton() | InputEvent.SHIFT_DOWN_MASK));
+        
+        
+        Preferences preferences = Preferences.userRoot().node("sc-editor");
+        JMenuItem lastOpenedFile = new JMenuItem("Reopen last opened file", KeyEvent.VK_R);
+        lastOpenedFile.setEnabled(preferences.get("LAST_OPENED_FILE", null) != null);
+        lastOpenedFile.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_R, KeyboardUtils.ctrlButton()));
+        lastOpenedFile.addActionListener(this::openLastFile);
+
         JMenuItem close = new JMenuItem("Close", KeyEvent.VK_C);
         JMenuItem exit = new JMenuItem("Exit");
 
@@ -73,6 +81,7 @@ public class FileMenu extends JMenu {
         this.add(open);
         this.add(this.saveButton);
         this.add(this.saveAsButton);
+        this.add(lastOpenedFile);
         this.add(close);
 
         this.addSeparator();
@@ -97,6 +106,17 @@ public class FileMenu extends JMenu {
 
         this.saveButton.setEnabled(canSave);
         this.saveAsButton.setEnabled(canSave);
+    }
+
+    private void openLastFile(ActionEvent e) {
+        Preferences preferences = Preferences.userRoot().node("sc-editor");
+        String lastOpenedFilePath = preferences.get("LAST_OPENED_FILE", null);
+        if (lastOpenedFilePath != null) {
+            Path path = Path.of(lastOpenedFilePath);
+            if (Files.exists(path)) {
+                editor.openFile(path);
+            }
+        }
     }
 
     private void open(ActionEvent e) {

@@ -271,8 +271,11 @@ public class Editor {
 
             row = objectsTable.indexOf(displayObject.getId(), 0);
         }
-
-        objectsTable.select(row);
+        try { // Note: There's a bug when viewing MovieClipModifier that causes an ExceptionDialog to show up.
+            objectsTable.select(row);
+        } catch (Exception e) {
+            //e.printStackTrace();
+        }
     }
 
     public void findUsages(int displayObjectId, String name) {

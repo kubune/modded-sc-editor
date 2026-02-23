@@ -167,11 +167,11 @@ public class FileMenu extends JMenu {
 
         preferences.put(SAVE_DIRECTORY_KEY, path.toAbsolutePath().getParent().toString());
 
-        editor.saveFile(path.toString());
+        editor.saveFile(path);
         System.out.println(path.toString());
     }
 
-    private static @NotNull BetterFileChooser createFileChooser(Preferences preferences, String saveDirectoryKey) {
+    public static @NotNull BetterFileChooser createFileChooser(Preferences preferences, String saveDirectoryKey) {
         String lastDirectoryString = preferences.get(saveDirectoryKey, null);
         Path lastDirectory = lastDirectoryString != null ? Path.of(lastDirectoryString) : null;
 

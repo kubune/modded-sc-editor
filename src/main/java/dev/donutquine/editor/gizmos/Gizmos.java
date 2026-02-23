@@ -77,6 +77,14 @@ public class Gizmos implements UndoRedoManager {
         this.mouseY = y;
     }
 
+    public DisplayObject getTouchedObject() {
+        return this.touchedObject;
+    }
+    
+    public void setTouchedObject(DisplayObject touchedObject) {
+        this.touchedObject = touchedObject;
+    }
+
     public void setMousePressed(boolean mousePressed) {
         this.mousePressed = mousePressed;
         CursorType cursor = CursorType.DEFAULT_CURSOR;

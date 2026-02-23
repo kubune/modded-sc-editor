@@ -22,6 +22,7 @@ import dev.donutquine.editor.layout.EditorDropTarget;
 import dev.donutquine.editor.layout.GestureUtilities;
 import dev.donutquine.editor.layout.components.EditorCanvas;
 import dev.donutquine.editor.layout.components.Table;
+import dev.donutquine.editor.layout.contextmenus.ViewportContextMenu;
 import dev.donutquine.editor.layout.cursor.Cursors;
 import dev.donutquine.editor.layout.menubar.EditorMenuBar;
 import dev.donutquine.editor.layout.panels.DisplayObjectListPanel;
@@ -61,6 +62,8 @@ public class EditorWindow extends Window {
     private StatusBar statusBar;
     private FPSAnimator fpsAnimator;
     private int targetFps;
+
+    private ViewportContextMenu viewportContextMenu;
 
     public EditorWindow(Editor editor) {
         this.editor = editor;
@@ -140,6 +143,9 @@ public class EditorWindow extends Window {
         this.frame.setMinimumSize(MINIMUM_SIZE);
         this.frame.setSize(this.frame.getContentPane().getPreferredSize());
         this.frame.pack();
+        
+        this.viewportContextMenu = new ViewportContextMenu(this);
+
         EditorStage.getInstance().setEditorWindow(this);
         RotationUtils.init(this);
     }
@@ -149,6 +155,11 @@ public class EditorWindow extends Window {
 
         this.canvas.getAnimator().start();
     }
+
+    public ViewportContextMenu getViewportContextMenu() {
+        return this.viewportContextMenu;
+    }
+
 
     public Editor getEditor() {
         return this.editor;

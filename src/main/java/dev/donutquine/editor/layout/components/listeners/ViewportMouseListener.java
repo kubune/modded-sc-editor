@@ -1,6 +1,7 @@
 package dev.donutquine.editor.layout.components.listeners;
 
 import dev.donutquine.editor.layout.ScalingUtils;
+import dev.donutquine.editor.layout.windows.EditorWindow;
 import dev.donutquine.editor.renderer.Camera;
 import dev.donutquine.editor.renderer.impl.EditorStage;
 import dev.donutquine.editor.gizmos.Gizmos;
@@ -9,6 +10,8 @@ import org.jetbrains.annotations.Nullable;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+
+import javax.swing.SwingUtilities;
 
 public class ViewportMouseListener extends MouseAdapter {
     @Override
@@ -39,6 +42,10 @@ public class ViewportMouseListener extends MouseAdapter {
         assert point != null : "Stage is not in a valid state";
 
         Gizmos gizmos = EditorStage.getInstance().getGizmos();
+        if (SwingUtilities.isRightMouseButton(e) & gizmos.getTouchedObject() != null) {
+            EditorWindow window = EditorStage.getInstance().getEditorWindow();
+            window.getViewportContextMenu().getPopupMenu().show(e.getComponent(), e.getX(), e.getY());
+        }
         gizmos.mouseClicked(point.getX(), point.getY(), e.getClickCount());
     }
 

@@ -1,19 +1,27 @@
 package dev.donutquine.editor.layout.panels;
 
-import dev.donutquine.editor.Editor;
-import dev.donutquine.editor.layout.components.Table;
-import dev.donutquine.editor.layout.components.listeners.DisplayObjectListMouseListener;
-import dev.donutquine.editor.layout.contextmenus.DisplayObjectContextMenu;
+import java.awt.BorderLayout;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Pattern;
 
-import javax.swing.*;
+import javax.swing.BorderFactory;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextField;
+import javax.swing.ListSelectionModel;
+import javax.swing.RowFilter;
+import javax.swing.RowSorter;
+import javax.swing.SortOrder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
-import java.awt.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.regex.Pattern;
+
+import dev.donutquine.editor.Editor;
+import dev.donutquine.editor.layout.components.Table;
+import dev.donutquine.editor.layout.components.listeners.DisplayObjectListMouseListener;
+import dev.donutquine.editor.layout.contextmenus.DisplayObjectContextMenu;
 
 public class DisplayObjectListPanel extends JPanel {
     private final TableRowSorter<TableModel> sorter;
@@ -84,5 +92,10 @@ public class DisplayObjectListPanel extends JPanel {
 
     public void setFocusOnTextField() {
         this.textField.requestFocus();
+    }
+
+    public void refreshTable() {
+        this.table.revalidate();
+        this.table.repaint();
     }
 }

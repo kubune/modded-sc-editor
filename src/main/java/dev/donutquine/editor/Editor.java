@@ -155,6 +155,17 @@ public class Editor {
         this.swf.save(path, null);
     }
 
+    public void saveFile(Path filepath) {
+        if (this.swf == null) return;
+
+        if (this.swf.getContainerVersion() >= 5) {
+            CustomSave.saveSWF(this.swf, false, filepath);
+        } else {
+            this.swf.save(filepath.toString(), null);
+        }
+    }
+
+
     public void closeFile() {
         this.window.getTexturesTable().clear();
         this.window.getObjectsTable().clear();
@@ -351,7 +362,7 @@ public class Editor {
         EditorStage.getInstance().setWireframeEnabled(wireframeEnabled);
     }
 
-    private void updateObjectTable() {
+    public void updateObjectTable() {
         List<Object[]> rowDataList = collectObjectTableRows();
 
         StatusBar statusBar = this.window.getStatusBar();

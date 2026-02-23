@@ -11,11 +11,14 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.prefs.Preferences;
 
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JSlider;
 import javax.swing.ListSelectionModel;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -23,10 +26,13 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import org.jetbrains.annotations.NotNull;
 
 import dev.donutquine.editor.Editor;
+import dev.donutquine.editor.SwfReassembler;
 import dev.donutquine.editor.layout.components.Table;
 import dev.donutquine.editor.layout.components.TablePopupMenuListener;
 import dev.donutquine.editor.layout.filechooser.BetterFileChooser;
+import dev.donutquine.editor.layout.menubar.menus.FileMenu;
 import dev.donutquine.editor.renderer.Framebuffer;
+import dev.donutquine.editor.renderer.Stage;
 import dev.donutquine.editor.renderer.impl.EditorStage;
 import dev.donutquine.editor.renderer.impl.RendererHelper;
 import dev.donutquine.exporter.FfmpegVideoExporter;
@@ -42,16 +48,20 @@ import dev.donutquine.renderer.impl.swf.objects.MovieClip;
 import dev.donutquine.streams.ByteStream;
 import dev.donutquine.swf.ColorTransform;
 import dev.donutquine.swf.DisplayObjectOriginal;
+import dev.donutquine.swf.Export;
 import dev.donutquine.swf.Matrix2x3;
 import dev.donutquine.swf.SupercellSWF;
 import dev.donutquine.swf.exceptions.UnableToFindObjectException;
 import dev.donutquine.swf.movieclips.MovieClipOriginal;
 import dev.donutquine.swf.movieclips.MovieClipState;
+import dev.donutquine.swf.shapes.ShapeDrawBitmapCommand;
+import dev.donutquine.swf.shapes.ShapeOriginal;
 import dev.donutquine.swf.textfields.TextFieldOriginal;
 import dev.donutquine.utilities.ByteArrayFlavor;
 import dev.donutquine.utilities.ImageUtils;
 import dev.donutquine.utilities.MovieClipHelper;
 import dev.donutquine.utilities.PathUtils;
+import jdk.jfr.consumer.RecordedClassLoader;
 
 public class DisplayObjectContextMenu extends ContextMenu {
     private static final Clipboard SYSTEM_CLIPBOARD = Toolkit.getDefaultToolkit().getSystemClipboard();
@@ -104,6 +114,96 @@ public class DisplayObjectContextMenu extends ContextMenu {
         this.addSeparator();
 
         this.add("Properties");
+
+        JMenuItem editExportName = this.add("Edit export name");
+        editExportName.addActionListener((ActionEvent e) -> {
+            
+            SupercellSWF swf = editor.getSwf();
+            int[] selectedRows = table.getSelectedRows();
+            if (selectedRows.length == 1) {
+                int displayObjectId = getDisplayObjectId(this.table.getSelectedRow());
+                try {
+                    DisplayObjectOriginal original = swf.getOriginalDisplayObject(displayObjectId, null);
+
+                    if (original instanceof MovieClipOriginal movieClipOriginal) {
+                        String newName = JOptionPane.showInputDialog(
+                            editor.getWindow().getFrame(),
+                            "Enter new export name:",
+                            movieClipOriginal.getExportName()
+                        );
+                        movieClipOriginal.setExportName(newName);
+                        List<Export> exports = swf.getExports();
+                        for (int i = 0; i < exports.size(); i++) {
+                            Export export = exports.get(i);
+                            if (export.id() == movieClipOriginal.getId()) {
+                                Export replace = new Export(displayObjectId, newName);
+                                exports.remove(export);
+                                exports.add(replace);
+                            }
+                        }
+                    }
+                } catch (UnableToFindObjectException ex) {
+                    ex.printStackTrace();
+                }
+            }
+            editor.getWindow().getObjectsTable().clear();
+            editor.updateObjectTable();
+        });
+
+        JMenuItem addToStage = this.add("Add to stage");
+        addToStage.addActionListener((ActionEvent e) -> {
+            int[] selectedRows = table.getSelectedRows();
+            for (int i : selectedRows) {
+                int displayObjectId = getDisplayObjectId(i);
+                DisplayObjectOriginal displayObjectOriginal;
+                DisplayObject displayObject = null;
+                try {
+                    displayObjectOriginal = editor.getSwf().getOriginalDisplayObject(displayObjectId, null);
+                    displayObject = DisplayObjectFactory.createFromOriginal(displayObjectOriginal, editor.getSwf(), null);
+                } catch (UnableToFindObjectException e1) {}
+                displayObject.setY(i*300);
+                EditorStage.getInstance().addChild(displayObject);
+            }
+        });
+
+        JMenuItem cloneExport = this.add("Export to new .sc");
+        cloneExport.addActionListener((ActionEvent e) -> {
+            SupercellSWF swf = editor.getSwf();
+            int[] selectedRows = table.getSelectedRows();
+            SwfReassembler reassembler = new SwfReassembler();
+            SupercellSWF reassmblerSWF = reassembler.getSwf();
+            List<Integer> usedTextures = new ArrayList<>();
+            for (int i : selectedRows) {
+                int displayObjectId = getDisplayObjectId(i);
+                try {
+                    MovieClipOriginal original = swf.getOriginalMovieClip(displayObjectId, null);
+                    for (Export export : swf.getExports()) {
+                        if (export.id() == original.getId()) {
+                            int newId = reassembler.addMovieClip(original, swf);
+                            reassembler.addExport(newId, export.name());
+                        }
+                    }   
+                } catch (UnableToFindObjectException ex) {}
+            }
+            for (ShapeOriginal shape : reassmblerSWF.getShapes()) {
+                for (ShapeDrawBitmapCommand command : shape.getCommands()) {
+                    if (!usedTextures.contains(command.getTextureIndex())) {
+                        usedTextures.add(command.getTextureIndex());
+                    }
+                }
+            }
+            for (int j = 0; j < usedTextures.size(); j++) {
+                reassmblerSWF.addTexture(swf.getTexture(j));    
+            }
+            reassembler.recalculateIds();
+            Preferences preferences = Preferences.userRoot().node("sc-editor");
+            BetterFileChooser fileChooser = FileMenu.createFileChooser(preferences, "saveDirectory");
+            fileChooser.setFileSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+            fileChooser.setFileFilter(new FileNameExtensionFilter("Supercell SWF (*.sc)", "sc"));
+
+            Path path = BetterFileChooser.showSaveDialog(fileChooser, editor.getWindow().getFrame(), "sc");
+            reassmblerSWF.save(path.toString(), null);
+        });
 
         this.popupMenu.addPopupMenuListener(new TablePopupMenuListener(this.popupMenu, table, this::onRowSelected));
     }

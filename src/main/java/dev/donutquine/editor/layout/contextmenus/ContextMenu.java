@@ -93,4 +93,8 @@ public abstract class ContextMenu {
     protected void setMainComponentsEnabled(boolean enabled) {
         mainComponents.forEach(component -> component.setEnabled(enabled));
     }
+
+    public JPopupMenu getPopupMenu() {
+        return this.popupMenu;
+    }
 }
